@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capstone Mini Study</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 16px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
+    button { padding: 12px 14px; border-radius: 10px; border: 1px solid #111; background: #111; color: #fff; cursor: pointer; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <h1>Capstone Mini Study</h1>
+  <div class="card" id="app"></div>
+
+  <script>
+    const app = document.getElementById('app');
+
+    function screenConsent() {
+      app.innerHTML = `
+        <p><strong>Consent:</strong> This anonymous activity takes ~45 seconds. No names/emails are collected. You can stop anytime.</p>
+        <button id="startBtn">I Agree, Start</button>
+      `;
+      document.getElementById('startBtn').onclick = () => screenQuestion();
+    }
+
+    function screenQuestion() {
+      app.innerHTML = `
+        <p>Quick question:</p>
+        <p><strong>Right now, how “in control” do you feel?</strong></p>
+        <label><input type="radio" name="ctl" value="1"> 1 (Not at all)</label><br>
+        <label><input type="radio" name="ctl" value="2"> 2</label><br>
+        <label><input type="radio" name="ctl" value="3"> 3</label><br>
+        <label><input type="radio" name="ctl" value="4"> 4</label><br>
+        <label><input type="radio" name="ctl" value="5"> 5 (Very much)</label><br><br>
+        <button id="submitBtn" disabled>Submit</button>
+      `;
+
+      const submitBtn = document.getElementById('submitBtn');
+      document.querySelectorAll('input[name="ctl"]').forEach(r => {
+        r.addEventListener('change', () => submitBtn.disabled = false);
+      });
+
+      submitBtn.onclick = () => {
+        const val = document.querySelector('input[name="ctl"]:checked').value;
+        // For now: just show it. Later we can save it to Google Sheets.
+        screenThanks(val);
+      };
+    }
+
+    function screenThanks(val) {
+      app.innerHTML = `
+        <p>✅ Thanks! Your response was recorded locally (demo).</p>
+        <p><strong>Your answer:</strong> ${val}</p>
+        <p>If you want to know what this measures, ask us at the poster.</p>
+      `;
+    }
+
+    screenConsent();
+  </script>
+</body>
+</html>
